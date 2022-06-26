@@ -1,0 +1,26 @@
+.feedCreate {
+  @apply flex flex-col mx-auto rounded-sm;
+  max-width: 50rem;
+  width: 100%;
+
+
+  & .textarea {
+    @apply w-full h-32 p-1 mt-1 border-slate-400 border rounded-sm;
+  }
+
+  & .textarea:focus {
+    @apply outline-none;
+  }
+
+  & .footer {
+    @apply flex items-center;
+
+    & .subTitle {
+      @apply hidden sm:flex my-1 text-base font-semibold text-gray-500;
+    }
+
+    & .button {
+      @apply mr-auto sm:mr-0 sm:ml-auto mt-2 border-2 px-2 text-lg rounded border-pink-900 font-normal text-pink-900 hover:text-white hover:bg-pink-900;
+    }
+  }
+}
