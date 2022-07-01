@@ -13,7 +13,7 @@ export const getNewsData = async () => {
     return [];
   }
   const keyword = '정치%2C사회%2C경제%2C국제';
-  const newsUrl = `https://openapi.naver.com/v1/search/news.json?query=${keyword}&display=100&start=1&sort=sim`;
+  const newsUrl = `https://openapi.naver.com/v1/search/news.json?query=${keyword}&display=100&start=1&sort=date`;
   const resp = await fetch(newsUrl, {
     method: 'GET',
     headers: {
