@@ -1,12 +1,10 @@
 import { GetStaticProps, NextPage } from 'next';
-import { useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { VariableSizeList as List } from 'react-window';
-import FeedCreate from '../components/FeedCreate';
 import Navbar from '../components/Navbar';
 import { NewsItem } from '../components/News';
 import { NewsModel } from '../model/news';
+import { FeedCreateForm } from '../model/feed';
 import { getNewsData } from '../utils/news';
+import { useRouter } from 'next/router';
 
 export const getStaticProps: GetStaticProps = async () => {
   const news = await getNewsData();
@@ -20,12 +18,40 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const Index: NextPage<{ news: NewsModel[] }> = (props) => {
   const { news } = props;
+  const router = useRouter();
   return (
     <div>
       <Navbar />
       <main className="mx-2 pb-4">
         {news.map((item, index) => (
-          <NewsItem key={item.id} news={item} index={index} />
+          <NewsItem
+            key={item.id}
+            news={item}
+            index={index}
+            onFormSubmit={async (index, text) => {
+              try {
+                const form: FeedCreateForm = {
+                  content: text,
+                  newsTitle: news[index].title,
+                  newsLink: news[index].link,
+                };
+                await fetch('/api/feeds', {
+                  method: 'POST',
+                  body: JSON.stringify(form),
+                  headers: {
+                    'content-type': 'application/json',
+                  },
+                  credentials: 'include',
+                });
+                router.push('/feeds');
+              } catch (error) {
+                if (process.env.NODE_ENV !== 'production') {
+                  console.error(error);
+                }
+                alert('피드 업로드 실패');
+              }
+            }}
+          />
         ))}
       </main>
     </div>
