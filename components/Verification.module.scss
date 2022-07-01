@@ -1,0 +1,13 @@
+.verification {
+  @apply flex flex-col mt-16 px-4 py-6 bg-white mx-auto;
+  max-width: 50rem;
+  width: 100%;
+
+  & .title {
+    @apply text-2xl font-bold;
+  }
+
+  & .description {
+    @apply text-lg font-normal text-gray-500 mt-6;
+  }
+}

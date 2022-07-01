@@ -24,7 +24,8 @@
     @apply mt-4 flex items-center;
 
     & .link {
-      @apply text-sm font-semibold text-sky-600 py-1 z-10;
+      @apply text-sm font-semibold text-sky-600 py-1;
+      z-index: 8;
     }
   
     & .publishedAt {

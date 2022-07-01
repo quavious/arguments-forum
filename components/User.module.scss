@@ -1,0 +1,9 @@
+.user {
+  max-width: 50rem;
+  width: 100%;
+  margin: 1rem auto;
+
+  & > div {
+    @apply mx-2;
+  }
+}

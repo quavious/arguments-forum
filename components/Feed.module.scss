@@ -1,0 +1,28 @@
+.feed {
+  @apply py-2 px-4 shadow-sm rounded-md bg-white;
+  max-width: 50rem;
+  width: 100%;
+  margin: 1rem auto 1rem auto;
+
+  & .username {
+    @apply text-pink-900 font-bold text-base;
+  }
+
+  & .content {
+    @apply mt-2 text-base font-medium text-gray-800;
+    height: 4.5rem;
+    overflow-y: hidden;
+  }
+
+  & .createdAt {
+    @apply ml-auto font-bold text-sm text-black;
+  }
+
+  & .divider {
+    @apply my-2 w-full font-bold;
+  }
+
+  & .newsLink {
+    @apply mt-2 font-semibold text-gray-500;
+  }
+}

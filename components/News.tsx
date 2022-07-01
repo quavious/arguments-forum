@@ -5,6 +5,7 @@ import { NewsModel } from '../model/news';
 import style from './News.module.scss';
 import { useState } from 'react';
 import FeedCreate from './FeedCreate';
+import { useSession } from 'next-auth/react';
 
 export interface NewsItemProps {
   index?: number;
@@ -18,6 +19,7 @@ export const NewsItem = (props: NewsItemProps) => {
     text: '',
     isOpen: false,
   });
+  const { status } = useSession();
   if (!news) {
     return <></>;
   }
@@ -51,7 +53,12 @@ export const NewsItem = (props: NewsItemProps) => {
         }}
       />
       <footer className={style['footer']}>
-        <a className={style['link']} href={news.link} target="__blank">
+        <a
+          className={style['link']}
+          href={news.link}
+          target="__blank"
+          onClick={(event) => event.stopPropagation()}
+        >
           {'원문 보기'}
         </a>
         <h5 className={style['publishedAt']}>
@@ -59,7 +66,7 @@ export const NewsItem = (props: NewsItemProps) => {
             ' 전'}
         </h5>
       </footer>
-      {form.isOpen && (
+      {form.isOpen && status === 'authenticated' && (
         <FeedCreate
           text={form.text}
           onTextChange={(value) => {
@@ -68,11 +75,12 @@ export const NewsItem = (props: NewsItemProps) => {
               text: value,
             });
           }}
-          onTextSubmit={(value) => {
+          onTextSubmit={async (value) => {
             if (typeof index !== 'number') {
               return;
             }
-            onFormSubmit && onFormSubmit(index, value);
+            await (onFormSubmit && onFormSubmit(index, value));
+            setForm(() => ({ text: '', isOpen: false }));
           }}
         />
       )}
