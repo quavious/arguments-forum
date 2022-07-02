@@ -20,9 +20,12 @@ const Feed = ({ feed }: { feed: FeedModel }) => {
       <p className={style['content']}>{feed.content}</p>
       <h5 className=" text-blue-900 font-bold">{feed.subFeed} 서브피드</h5>
       <hr className={style['divider']} />
-      <a href={feed.newsLink} className={style['newsLink']} target="__blank">
-        {feed.newsTitle}
-      </a>
+      <a
+        href={feed.newsLink}
+        className={style['newsLink']}
+        target="__blank"
+        dangerouslySetInnerHTML={{ __html: feed.newsTitle }}
+      />
     </div>
   );
 };
