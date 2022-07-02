@@ -22,7 +22,7 @@ const Index: NextPage<{ news: NewsModel[] }> = (props) => {
   return (
     <div>
       <Navbar />
-      <main className="mx-2 pb-4">
+      <main className="mx-2 mt-2 pb-4">
         {news.map((item, index) => (
           <NewsItem
             key={item.id}
@@ -43,7 +43,7 @@ const Index: NextPage<{ news: NewsModel[] }> = (props) => {
                   },
                   credentials: 'include',
                 });
-                router.push('/feeds');
+                router.push('/feeds/new');
               } catch (error) {
                 if (process.env.NODE_ENV !== 'production') {
                   console.error(error);

@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link href={'/'}>뉴스</Link>
           </h3>
           <h3 className={style['item']}>
-            <Link href={'/feeds'}>피드</Link>
+            <Link href={'/feeds/new'}>피드</Link>
           </h3>
           {!isLoading &&
             (status === 'authenticated' && data ? (
