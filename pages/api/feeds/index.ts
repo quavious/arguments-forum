@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 import { getToken } from 'next-auth/jwt';
-import { FeedCreateForm } from '../../../model/feed';
+import { FeedCreateForm, FeedModel } from '../../../model/feed';
 import { prisma } from '../../../utils/db';
 import { buildFakeUsername } from '../../../utils/username';
 
@@ -35,6 +35,41 @@ const feeds: NextApiHandler = async (req, res) => {
         });
       }
       break;
+    case 'GET':
+      let _page = req.query.page;
+      let page: number;
+      if (typeof _page !== 'string') {
+        page = 1;
+      } else {
+        page = parseInt(_page) || 1;
+      }
+      const response = await prisma.feed.findMany({
+        take: 20,
+        skip: (page - 1) * 20,
+        where: {
+          isDeleted: false,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          _count: {
+            select: {
+              subFeeds: true,
+            },
+          },
+        },
+      });
+      const feeds: FeedModel[] = response.map((element) => ({
+        ...element,
+        createdAt: element.createdAt.toISOString(),
+        updatedAt: element.updatedAt.toISOString(),
+        subFeed: element._count.subFeeds,
+        userId: '',
+      }));
+      return res.status(200).json({
+        feeds,
+      });
     default:
       res.status(405).json({
         message: 'Method is not allowed.',
