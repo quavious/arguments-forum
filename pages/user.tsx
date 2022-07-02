@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const UserPage: NextPage<{ user: UserProps }> = (props) => {
   const { user } = props;
   return (
-    <div>
+    <div className="mt-2 mx-2">
       <User name={user?.name} email={user?.email} />
     </div>
   );
