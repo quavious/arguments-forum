@@ -11,8 +11,19 @@ const User = (props: UserProps) => {
   return (
     <div className={style['user']}>
       <div>
-        {username && <h2>이름: {username}</h2>}
-        {email && <h2>이메일: {email}</h2>}
+        {username && (
+          <div className="flex flex-col">
+            <h2 className="font-bold text-lg sm:text-2xl text-black">
+              {username}
+            </h2>
+            <h3 className="font-medium text-md sm:text-lg text-gray-600">
+              {email}
+            </h3>
+          </div>
+        )}
+        {email && (
+          <h2 className="font-bold text-lg sm:text-2xl text-black">{email}</h2>
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
 import { GetServerSideProps, NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
-import FeedComponent from '../../components/FeedComponent';
-import { FeedModel, SubFeedModel } from '../../model/feed';
-import { prisma } from '../../utils/db';
+import FeedMain from '@components/FeedMain';
+import SubFeedCreate from '@components/SubFeedCreate';
+import { FeedModel, SubFeedModel } from '@models/feed';
+import { prisma } from '@utils/db';
+import SubFeed from '@components/SubFeed';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
@@ -52,6 +55,9 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
   const { feed } = props;
   const [page, setPage] = useState(1);
   const [subFeeds, setSubFeeds] = useState<SubFeedModel[]>([]);
+  const [newSubFeeds, setNewSubFeeds] = useState<SubFeedModel[]>([]);
+  const [subFeedContent, setSubFeedContent] = useState('');
+  const { data: session, status } = useSession();
   const fetchSubFeeds = useCallback(async () => {
     const response = await fetch(`/api/feeds/${feed.id}/subfeeds?page=${page}`);
     const data: { subFeeds: SubFeedModel[] } = await response.json();
@@ -62,7 +68,44 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
   }, [fetchSubFeeds]);
   return (
     <div className="mt-2 mx-2">
-      <FeedComponent feed={feed} />
+      <FeedMain feed={feed} />
+      {status === 'authenticated' && (
+        <SubFeedCreate
+          content={subFeedContent}
+          onContentChange={(value) => setSubFeedContent(value)}
+          onContentSubmit={async (value) => {
+            if (!session || !session.user) {
+              return;
+            }
+            const subFeedForm = {
+              content: value,
+              feedId: feed.id,
+            };
+            const response = await fetch(`/api/feeds/${feed.id}/subfeeds`, {
+              method: 'POST',
+              body: JSON.stringify(subFeedForm),
+              headers: {
+                'content-type': 'application/json',
+              },
+              credentials: 'include',
+            });
+            const data = await response.json();
+            setSubFeedContent('');
+            const newSubFeed: SubFeedModel = data.subFeed;
+            setNewSubFeeds((current) => current.concat(newSubFeed));
+          }}
+        />
+      )}
+      <>
+        {newSubFeeds.map((subFeed) => (
+          <SubFeed key={subFeed.id} subFeed={subFeed} isCreatedNow={true} />
+        ))}
+      </>
+      <>
+        {subFeeds.map((subFeed) => (
+          <SubFeed key={subFeed.id} subFeed={subFeed} />
+        ))}
+      </>
     </div>
   );
 };

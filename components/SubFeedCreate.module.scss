@@ -1,0 +1,22 @@
+.subFeedCreate {
+  @apply p-1 bg-white rounded-md shadow-md;
+  max-width: 50rem;
+  width: 100%;
+  margin: 0 auto 0 auto;
+
+  & .subFeedForm {
+    @apply w-full flex flex-col;
+
+    & textarea {
+      @apply h-24 p-1 w-full;
+    }
+
+    & textarea:focus {
+      @apply outline-none;
+    }
+
+    & .footer {
+      @apply w-full pt-1 flex items-center;
+    }
+  }
+}
