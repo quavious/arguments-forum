@@ -43,7 +43,7 @@ const Index: NextPage<{ news: NewsModel[] }> = (props) => {
                   },
                   credentials: 'include',
                 });
-                router.push('/feeds/new');
+                await router.push('/feeds/new');
               } catch (error) {
                 if (process.env.NODE_ENV !== 'production') {
                   console.error(error);

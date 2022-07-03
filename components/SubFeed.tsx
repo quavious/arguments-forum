@@ -14,16 +14,16 @@ const SubFeed = (props: SubFeedProps) => {
         style['subFeed'] + `${isCreatedNow ? ' border border-red-600' : ''}`
       }
     >
-      <div className="mt-2 items-center">
-        <h3 className="mt-2 font-semibold text-pink-900">
-          {subFeed.fakeUsername}
-        </h3>
-        <h5 className="hidden ml-0 sm:ml-auto sm:flex font-semibold">
-          {subFeed.createdAt}
+      <div className="flex items-center">
+        <h3 className="font-semibold text-pink-900">{subFeed.fakeUsername}</h3>
+        <h5 className="hidden ml-0 sm:ml-auto sm:flex font-medium text-sm">
+          {new Date(subFeed.createdAt).toLocaleString()}
         </h5>
       </div>
       <p>{subFeed.content}</p>
-      <h5 className="flex sm:hidden font-semibold">{subFeed.createdAt}</h5>
+      <h5 className="flex sm:hidden font-medium text-sm">
+        {new Date(subFeed.createdAt).toLocaleString()}
+      </h5>
     </div>
   );
 };

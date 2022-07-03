@@ -6,6 +6,7 @@ import SubFeedCreate from '@components/SubFeedCreate';
 import { FeedModel, SubFeedModel } from '@models/feed';
 import { prisma } from '@utils/db';
 import SubFeed from '@components/SubFeed';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
@@ -58,6 +59,7 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
   const [newSubFeeds, setNewSubFeeds] = useState<SubFeedModel[]>([]);
   const [subFeedContent, setSubFeedContent] = useState('');
   const { data: session, status } = useSession();
+  const router = useRouter();
   const fetchSubFeeds = useCallback(async () => {
     const response = await fetch(`/api/feeds/${feed.id}/subfeeds?page=${page}`);
     const data: { subFeeds: SubFeedModel[] } = await response.json();
@@ -68,7 +70,16 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
   }, [fetchSubFeeds]);
   return (
     <div className="mt-2 mx-2">
-      <FeedMain feed={feed} />
+      <FeedMain
+        feed={feed}
+        onDeleteClick={async (feedId) => {
+          await fetch(`/api/feeds/${feedId}`, {
+            method: 'DELETE',
+            credentials: 'include',
+          });
+          await router.push('/feeds');
+        }}
+      />
       {status === 'authenticated' && (
         <SubFeedCreate
           content={subFeedContent}
