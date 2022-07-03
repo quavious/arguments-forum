@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { useCallback, useEffect, useState } from 'react';
-import Feed from '../components/Feed';
-import { FeedModel } from '../model/feed';
+import Feed from '@components/Feed';
+import { FeedModel } from '@models/feed';
 
 const FeedsPage: NextPage = () => {
   const [feeds, setFeeds] = useState<FeedModel[]>([]);

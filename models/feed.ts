@@ -23,3 +23,8 @@ export interface SubFeedModel
   updatedAt?: string;
   userId: '';
 }
+
+export interface SubFeedCreateForm {
+  content: string;
+  feedId: string;
+}

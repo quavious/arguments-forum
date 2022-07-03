@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { subDays, formatDistanceToNow, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { NewsModel } from '../model/news';
+import { NewsModel } from '@models/news';
 import style from './News.module.scss';
 import { useState } from 'react';
 import FeedCreate from './FeedCreate';

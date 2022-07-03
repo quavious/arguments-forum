@@ -1,8 +1,8 @@
 import { NextApiHandler } from 'next';
 import { getToken } from 'next-auth/jwt';
-import { FeedCreateForm, FeedModel } from '../../../model/feed';
-import { prisma } from '../../../utils/db';
-import { buildFakeUsername } from '../../../utils/username';
+import { FeedCreateForm, FeedModel } from '@models/feed';
+import { prisma } from '@utils/db';
+import { buildFakeUsername } from '@utils/username';
 
 const feeds: NextApiHandler = async (req, res) => {
   const method = req.method?.toUpperCase();

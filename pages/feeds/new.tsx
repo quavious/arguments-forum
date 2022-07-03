@@ -1,8 +1,8 @@
 import { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
-import Feed from '../../components/Feed';
-import { FeedModel } from '../../model/feed';
-import { prisma } from '../../utils/db';
+import Feed from '@components/Feed';
+import { FeedModel } from '@models/feed';
+import { prisma } from '@utils/db';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const feeds: FeedModel[] = (

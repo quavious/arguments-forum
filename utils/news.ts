@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { NewsModel, NewsResponse } from '../model/news';
+import { NewsModel, NewsResponse } from '@models/news';
 
 export let newsData: NewsModel[] = [];
 

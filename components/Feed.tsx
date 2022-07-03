@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FeedModel } from '../model/feed';
+import { FeedModel } from '@models/feed';
 import style from './Feed.module.scss';
 
 const Feed = ({ feed }: { feed: FeedModel }) => {

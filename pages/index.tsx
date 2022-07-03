@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from 'next';
-import Navbar from '../components/Navbar';
-import { NewsItem } from '../components/News';
-import { NewsModel } from '../model/news';
-import { FeedCreateForm } from '../model/feed';
-import { getNewsData } from '../utils/news';
+import Navbar from '@components/Navbar';
+import { NewsItem } from '@components/News';
+import { NewsModel } from '@models/news';
+import { FeedCreateForm } from '@models/feed';
+import { getNewsData } from '@utils/news';
 import { useRouter } from 'next/router';
 
 export const getStaticProps: GetStaticProps = async () => {
