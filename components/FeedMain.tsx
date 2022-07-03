@@ -1,9 +1,9 @@
-import { FeedModel, SubFeedModel } from '../model/feed';
-import style from './FeedComponent.module.scss';
+import { FeedModel, SubFeedModel } from '@models/feed';
+import style from './FeedMain.module.scss';
 
-const FeedComponent = ({ feed }: { feed: FeedModel }) => {
+const FeedMain = ({ feed }: { feed: FeedModel }) => {
   return (
-    <div className={style['feedComponent']}>
+    <div className={style['feedMain']}>
       <h5 className={style['username']}>{feed.fakeUsername}</h5>
       <p className={style['content']}>{feed.content}</p>
       <h5 className="mt-2 text-blue-900 font-bold">{feed.subFeed} 서브피드</h5>
@@ -18,4 +18,4 @@ const FeedComponent = ({ feed }: { feed: FeedModel }) => {
   );
 };
 
-export default FeedComponent;
+export default FeedMain;
