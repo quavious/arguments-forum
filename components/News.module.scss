@@ -17,7 +17,7 @@
   }
 
   & .description {
-    @apply mt-2 mb-2 text-base font-normal;
+    @apply mt-2 mb-2 text-base font-normal overflow-x-hidden;
   }
 
   & .footer {
