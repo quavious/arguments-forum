@@ -20,7 +20,11 @@ const SubFeed = (props: SubFeedProps) => {
           {new Date(subFeed.createdAt).toLocaleString()}
         </h5>
       </div>
-      <p>{subFeed.content}</p>
+      <p
+        dangerouslySetInnerHTML={{
+          __html: subFeed.content.split('\n').join('<br />'),
+        }}
+      />
       <h5 className="flex sm:hidden font-medium text-sm">
         {new Date(subFeed.createdAt).toLocaleString()}
       </h5>

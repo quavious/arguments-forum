@@ -50,8 +50,10 @@ const Navbar = () => {
           {!isLoading &&
             (status === 'authenticated' && data ? (
               <LoggedIn username={'마이페이지'} />
-            ) : (
+            ) : status === 'unauthenticated' ? (
               <NotLoggedIn />
+            ) : (
+              <></>
             ))}
         </div>
       </div>
