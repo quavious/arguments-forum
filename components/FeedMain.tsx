@@ -48,7 +48,9 @@ const FeedMain = (props: FeedMainProps) => {
       <a
         href={feed.newsLink}
         target="__blank"
-        dangerouslySetInnerHTML={{ __html: feed.newsTitle }}
+        dangerouslySetInnerHTML={{
+          __html: feed.newsTitle.replace(/<(.|\n)*?>/g, ''),
+        }}
         className={style['newsTitle']}
       />
     </div>

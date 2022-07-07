@@ -27,7 +27,9 @@ const Feed = ({ feed }: { feed: FeedModel }) => {
         href={feed.newsLink}
         className={style['newsLink']}
         target="__blank"
-        dangerouslySetInnerHTML={{ __html: feed.newsTitle }}
+        dangerouslySetInnerHTML={{
+          __html: feed.newsTitle.replace(/<(.|\n)*?>/g, ''),
+        }}
       />
     </div>
   );
