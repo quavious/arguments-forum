@@ -7,6 +7,7 @@ import { FeedModel, SubFeedModel } from '@models/feed';
 import { prisma } from '@utils/db';
 import SubFeed from '@components/SubFeed';
 import { useRouter } from 'next/router';
+import { Virtuoso } from 'react-virtuoso';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
@@ -69,53 +70,89 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
     fetchSubFeeds();
   }, [fetchSubFeeds]);
   return (
-    <div className="mt-2 mx-2">
-      <FeedMain
-        feed={feed}
-        onDeleteClick={async (feedId) => {
-          await fetch(`/api/feeds/${feedId}`, {
-            method: 'DELETE',
-            credentials: 'include',
-          });
-          await router.push('/feeds');
-        }}
-      />
-      {status === 'authenticated' && (
-        <SubFeedCreate
-          content={subFeedContent}
-          onContentChange={(value) => setSubFeedContent(value)}
-          onContentSubmit={async (value) => {
-            if (!session || !session.user) {
-              return;
+    <div className="mt-2 mx-2 h-full">
+      <>
+        <Virtuoso
+          itemContent={(index) => {
+            if (index === 0) {
+              return (
+                <>
+                  <FeedMain
+                    feed={feed}
+                    onDeleteClick={async (feedId) => {
+                      await fetch(`/api/feeds/${feedId}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                      });
+                      await router.push('/feeds');
+                    }}
+                  />
+                  {status === 'authenticated' && (
+                    <SubFeedCreate
+                      content={subFeedContent}
+                      onContentChange={(value) => setSubFeedContent(value)}
+                      onContentSubmit={async (value) => {
+                        if (!session || !session.user) {
+                          return;
+                        }
+                        const subFeedForm = {
+                          content: value,
+                          feedId: feed.id,
+                        };
+                        const response = await fetch(
+                          `/api/feeds/${feed.id}/subfeeds`,
+                          {
+                            method: 'POST',
+                            body: JSON.stringify(subFeedForm),
+                            headers: {
+                              'content-type': 'application/json',
+                            },
+                            credentials: 'include',
+                          },
+                        );
+                        const data = await response.json();
+                        setSubFeedContent('');
+                        const newSubFeed: SubFeedModel = data.subFeed;
+                        setNewSubFeeds((current) => current.concat(newSubFeed));
+                      }}
+                    />
+                  )}
+                  {newSubFeeds.map((subFeed) => (
+                    <SubFeed
+                      key={subFeed.id}
+                      subFeed={subFeed}
+                      isCreatedNow={true}
+                    />
+                  ))}
+                </>
+              );
+            } else {
+              return (
+                <SubFeed
+                  key={subFeeds[index - 1].id}
+                  subFeed={subFeeds[index - 1]}
+                />
+              );
             }
-            const subFeedForm = {
-              content: value,
-              feedId: feed.id,
-            };
-            const response = await fetch(`/api/feeds/${feed.id}/subfeeds`, {
-              method: 'POST',
-              body: JSON.stringify(subFeedForm),
-              headers: {
-                'content-type': 'application/json',
-              },
-              credentials: 'include',
-            });
-            const data = await response.json();
-            setSubFeedContent('');
-            const newSubFeed: SubFeedModel = data.subFeed;
-            setNewSubFeeds((current) => current.concat(newSubFeed));
+          }}
+          totalCount={subFeeds.length + 1}
+          className="no-scroll h-full"
+          endReached={() => setPage((page) => page + 1)}
+          components={{
+            Footer: () => {
+              return (
+                <div
+                  className="flex justify-center items-center h-16 mx-auto w-full p-2 bg-gray-100"
+                  style={{ maxWidth: '50rem' }}
+                >
+                  <h4 className="font-medium">
+                    서브피드를 더 불러오고 있습니다...
+                  </h4>
+                </div>
+              );
+            },
           }}
         />
-      )}
-      <>
-        {newSubFeeds.map((subFeed) => (
-          <SubFeed key={subFeed.id} subFeed={subFeed} isCreatedNow={true} />
-        ))}
-      </>
-      <>
-        {subFeeds.map((subFeed) => (
-          <SubFeed key={subFeed.id} subFeed={subFeed} />
-        ))}
       </>
     </div>
   );

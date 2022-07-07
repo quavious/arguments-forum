@@ -24,3 +24,21 @@ a {
   box-sizing: border-box;
   font-family: "Pretendard", sans-serif;
 }
+
+.subFeeds::-webkit-scrollbar {
+  display: none;
+}
+
+.subFeeds {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+.no-scroll {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}

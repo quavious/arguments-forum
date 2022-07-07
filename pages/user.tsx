@@ -3,6 +3,7 @@ import { FeedModel } from '@models/feed';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
+import { Virtuoso } from 'react-virtuoso';
 import User, { UserProps } from '../components/User';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -39,11 +40,33 @@ const UserPage: NextPage<{ user: UserProps }> = (props) => {
     fetchFeeds();
   }, [fetchFeeds]);
   return (
-    <div className="mt-2 mx-2">
-      <User name={user?.name} email={user?.email} />
-      {feeds.map((feed) => (
-        <Feed feed={feed} key={feed.id} />
-      ))}
+    <div className="mt-2 mx-2 h-full">
+      <Virtuoso
+        itemContent={(index) => {
+          if (index === 0) {
+            return <User name={user?.name} email={user?.email} />;
+          } else {
+            return <Feed feed={feeds[index - 1]} key={feeds[index - 1].id} />;
+          }
+        }}
+        totalCount={feeds.length + 1}
+        className="no-scroll"
+        endReached={() => {
+          setPage((page) => page + 1);
+        }}
+        components={{
+          Footer: () => {
+            return (
+              <div
+                className="flex justify-center items-center h-16 mx-auto w-full p-2 bg-gray-100"
+                style={{ maxWidth: '50rem' }}
+              >
+                <h4 className="font-medium">피드를 더 불러오고 있습니다...</h4>
+              </div>
+            );
+          },
+        }}
+      />
     </div>
   );
 };
