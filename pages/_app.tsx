@@ -3,8 +3,25 @@ import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/layout/Layout';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const [isChecked, setIsChecked] = useState(false);
+  useEffect(() => {
+    if (isChecked) {
+      return;
+    }
+    fetch('/api/status', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then(() => setIsChecked(true))
+      .catch((error) => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error);
+        }
+      });
+  }, [isChecked]);
   return (
     <>
       <Head>
