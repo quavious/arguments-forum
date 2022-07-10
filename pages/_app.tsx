@@ -4,9 +4,13 @@ import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/layout/Layout';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import Script from 'next/script';
+import * as gtag from '@utils/gtag';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [isChecked, setIsChecked] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     if (isChecked) {
       return;
@@ -22,6 +26,17 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         }
       });
   }, [isChecked]);
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      gtag.pageView(url);
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on('hashChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off('hashChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
   return (
     <>
       <Head>
@@ -35,6 +50,21 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         />
       </Head>
       <SessionProvider session={session}>
+        <Script strategy="afterInteractive" async={true} src={gtag.GA_URL} />
+        <Script
+          strategy="afterInteractive"
+          id="google-analytics"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+          }}
+        />
         <Layout>
           <Component {...pageProps} />
         </Layout>
