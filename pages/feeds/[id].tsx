@@ -8,6 +8,7 @@ import { prisma } from '@utils/db';
 import SubFeed from '@components/SubFeed';
 import { useRouter } from 'next/router';
 import { Virtuoso } from 'react-virtuoso';
+import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id = context.params?.id;
@@ -44,6 +45,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ...response,
     createdAt: response.createdAt.toISOString(),
     updatedAt: response.updatedAt.toISOString(),
+    newsTitle: response.newsTitle.replace(/<(.|\n)*?>/g, ''),
     subFeed: response._count.subFeeds,
     userId: '',
   };
@@ -56,21 +58,53 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
   const { feed } = props;
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [subFeeds, setSubFeeds] = useState<SubFeedModel[]>([]);
   const [newSubFeeds, setNewSubFeeds] = useState<SubFeedModel[]>([]);
   const [subFeedContent, setSubFeedContent] = useState('');
   const { data: session, status } = useSession();
   const router = useRouter();
-  const fetchSubFeeds = useCallback(async () => {
-    const response = await fetch(`/api/feeds/${feed.id}/subfeeds?page=${page}`);
-    const data: { subFeeds: SubFeedModel[] } = await response.json();
-    setSubFeeds((current) => current.concat(data.subFeeds));
-  }, [feed.id, page]);
+  const fetchSubFeeds = useCallback(
+    async (page: number) => {
+      const response = await fetch(
+        `/api/feeds/${feed.id}/subfeeds?page=${page}`,
+      );
+      const data: { subFeeds: SubFeedModel[] } = await response.json();
+      if (data.subFeeds.length <= 0) {
+        setHasMore(() => false);
+        return;
+      }
+      setSubFeeds((current) => current.concat(data.subFeeds));
+      setPage((page) => page + 1);
+    },
+    [feed.id],
+  );
   useEffect(() => {
-    fetchSubFeeds();
-  }, [fetchSubFeeds]);
+    fetchSubFeeds(page);
+  }, [fetchSubFeeds, page]);
   return (
     <div className="mt-2 mx-2 h-full">
+      <Head>
+        <title>피드 - ARGUMENTS</title>
+        <meta name="title" content={'ARGUMENTS 피드'} />
+        <meta name="og:title" content={'ARGUMENTS 피드'} />
+        <meta
+          name="description"
+          content={`${feed.newsTitle} - ARGUMENTS 피드`}
+        />
+        <meta
+          name="og:description"
+          content={`${feed.newsTitle} - ARGUMENTS 피드`}
+        />
+        <meta
+          name="url"
+          content={process.env.NEXT_PUBLIC_URL + `/feeds/${feed.id}`}
+        />
+        <meta
+          name="og:url"
+          content={process.env.NEXT_PUBLIC_URL + `/feeds/${feed.id}`}
+        />
+      </Head>
       <>
         <Virtuoso
           itemContent={(index) => {
@@ -137,7 +171,11 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
           }}
           totalCount={subFeeds.length + 1}
           className="no-scroll h-full"
-          endReached={() => setPage((page) => page + 1)}
+          endReached={() => {
+            if (hasMore) {
+              setPage((page) => page + 1);
+            }
+          }}
           components={{
             Footer: () => {
               return (

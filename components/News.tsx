@@ -38,7 +38,7 @@ export const NewsItem = (props: NewsItemProps) => {
         <h2
           className={style['title']}
           dangerouslySetInnerHTML={{
-            __html: news.title.replace(/<(.|\n)*?>/g, ''),
+            __html: news.title,
           }}
         />
         <h5 className={style['publishedAt']}>
@@ -49,7 +49,7 @@ export const NewsItem = (props: NewsItemProps) => {
       <p
         className={style['description']}
         dangerouslySetInnerHTML={{
-          __html: news.description.replace(/<(.|\n)*?>/g, ''),
+          __html: news.description,
         }}
       />
       <footer className={style['footer']}>

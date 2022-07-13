@@ -8,17 +8,23 @@ import { Virtuoso } from 'react-virtuoso';
 const FeedsPage: NextPage = () => {
   const [feeds, setFeeds] = useState<FeedModel[]>([]);
   const [page, setPage] = useState(1);
-  const fetchFeeds = useCallback(async () => {
+  const [hasMore, setHasMore] = useState(true);
+  const fetchFeeds = useCallback(async (page: number) => {
     if (!page) {
       return;
     }
     const response = await fetch(`/api/feeds?page=${page}`);
     const data: { feeds: FeedModel[] } = await response.json();
+    if (data.feeds.length <= 0) {
+      setHasMore(() => false);
+      return;
+    }
     setFeeds((current) => current.concat(data.feeds));
-  }, [page]);
+    setPage((page) => page + 1);
+  }, []);
   useEffect(() => {
-    fetchFeeds();
-  }, [fetchFeeds]);
+    fetchFeeds(page);
+  }, [fetchFeeds, page]);
   return (
     <div className="mx-2 mt-2 h-full">
       <Head>
@@ -38,7 +44,9 @@ const FeedsPage: NextPage = () => {
         style={{ height: '100%' }}
         className="no-scroll"
         endReached={() => {
-          setPage((page) => page + 1);
+          if (hasMore) {
+            fetchFeeds(page);
+          }
         }}
         components={{
           Footer: () => {

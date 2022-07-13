@@ -27,6 +27,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     ...feed,
     subFeed: feed._count.subFeeds,
     userId: '',
+    newsTitle: feed.newsTitle.replace(/<(.|\n)*?>/g, ''),
     createdAt: feed.createdAt.toISOString(),
     updatedAt: feed.updatedAt.toISOString(),
   }));

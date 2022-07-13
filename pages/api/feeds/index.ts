@@ -64,6 +64,7 @@ const feeds: NextApiHandler = async (req, res) => {
         ...element,
         createdAt: element.createdAt.toISOString(),
         updatedAt: element.updatedAt.toISOString(),
+        newsTitle: element.newsTitle.replace(/<(.|\n)*?>/g, ''),
         subFeed: element._count.subFeeds,
         userId: '',
       }));
