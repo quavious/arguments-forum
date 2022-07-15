@@ -65,6 +65,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           `,
           }}
         />
+        <Script
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          async={true}
+          id="google-adsense"
+          data-ad-client={`ca-pub-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+        />
         <Layout>
           <Component {...pageProps} />
         </Layout>

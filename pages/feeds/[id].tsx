@@ -90,11 +90,11 @@ const FeedPage: NextPage<{ feed: FeedModel }> = (props) => {
         <meta name="og:title" content={'ARGUMENTS 피드'} />
         <meta
           name="description"
-          content={`${feed.newsTitle} - ARGUMENTS 피드`}
+          content={`ARGUMENTS 피드 - ${feed.content.slice(0, 40)}...`}
         />
         <meta
           name="og:description"
-          content={`${feed.newsTitle} - ARGUMENTS 피드`}
+          content={`ARGUMENTS 피드 - ${feed.content.slice(0, 40)}...`}
         />
         <meta
           name="url"
