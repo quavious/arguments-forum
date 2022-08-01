@@ -25,7 +25,7 @@ export const getNewsData = async () => {
   const converted: NewsModel[] = data.items.map((item) => ({
     id: nanoid(),
     title: item.title.replace(/<(.|\n)*?>/g, ''),
-    link: item.originallink,
+    link: item.originallink.replace('http://', 'https://'),
     description: item.description.replace(/<(.|\n)*?>/g, ''),
     publishedAt: item.pubDate,
   }));

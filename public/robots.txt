@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://feedarguments.com/sitemap.xml
+Sitemap: https://feedarguments.com/sitemap.xml

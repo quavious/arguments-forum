@@ -24,7 +24,7 @@
     @apply mt-4 flex items-center;
 
     & .link {
-      @apply text-sm font-semibold text-sky-600 py-1;
+      @apply text-sm font-semibold text-sky-600 py-1 cursor-pointer;
       z-index: 8;
     }
   

@@ -55,9 +55,14 @@ export const NewsItem = (props: NewsItemProps) => {
       <footer className={style['footer']}>
         <a
           className={style['link']}
-          href={news.link}
           target="__blank"
-          onClick={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (typeof global.window !== 'undefined') {
+              global.window.open(news.link, '_blank');
+            }
+          }}
         >
           {'원문 보기'}
         </a>
